@@ -7,86 +7,63 @@ export default function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
-  const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = e =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
       const { data } = await loginUser(formData);
       localStorage.setItem('token', data.token);
-      navigate('/home');
+      navigate('/dashboard');
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'var(--color-bg)',
-        padding: '1rem',
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <form
         onSubmit={handleSubmit}
-        style={{
-          width: '100%',
-          maxWidth: '400px',
-          padding: '2rem',
-          borderRadius: '8px',
-          backgroundColor: 'var(--color-bg)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          color: 'var(--color-text)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-        }}
+        className="w-full max-w-sm bg-background text-text p-6 rounded-lg shadow-md flex flex-col gap-4 border border-secondary"
       >
-        <h2
-          style={{
-            textAlign: 'center',
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: 'var(--color-primary)',
-            marginBottom: '1rem',
-          }}
-        >
-          Login
-        </h2>
-        <FormInput label="Email" type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required />
-        <FormInput label="Password" type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required />
+        <h2 className="text-2xl font-bold text-center text-primary mb-2">Login</h2>
+
+        <FormInput
+          label="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Enter your email"
+          required
+        />
+        <FormInput
+          label="Password"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Enter your password"
+          required
+        />
+
         <button
           type="submit"
-          style={{
-            padding: '0.75rem',
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-bg)',
-            fontWeight: '700',
-            fontSize: '1rem',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-secondary)')}
-          onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
+          className="bg-primary text-background font-bold text-base py-2 rounded hover:bg-secondary transition-colors"
         >
           Login
         </button>
-        <p style={{ textAlign: 'center', marginTop: '1rem', color: 'var(--color-text-secondary)' }}>
+
+        <p className="text-center text-sm text-text-secondary mt-2">
           Don't have an account?{' '}
           <span
-            style={{ color: 'var(--color-primary)', cursor: 'pointer' }}
+            className="text-primary hover:underline cursor-pointer"
             onClick={() => navigate('/signup')}
           >
             Signup
           </span>
         </p>
-
       </form>
     </div>
   );

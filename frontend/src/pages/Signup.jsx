@@ -7,7 +7,8 @@ export default function Signup() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
 
-  const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = e =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -21,73 +22,58 @@ export default function Signup() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'var(--color-bg)',
-        padding: '1rem',
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <form
         onSubmit={handleSubmit}
-        style={{
-          width: '100%',
-          maxWidth: '400px',
-          padding: '2rem',
-          borderRadius: '8px',
-          backgroundColor: 'var(--color-bg)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          color: 'var(--color-text)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-        }}
+        className="w-full max-w-sm bg-background text-text p-6 rounded-lg shadow-md flex flex-col gap-4 border border-secondary"
       >
-        <h2
-          style={{
-            textAlign: 'center',
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: 'var(--color-primary)',
-            marginBottom: '1rem',
-          }}
-        >
+        <h2 className="text-2xl font-bold text-center text-primary mb-2">
           Signup
         </h2>
-        <FormInput label="Name" name="name" value={formData.name} onChange={handleChange} placeholder="Enter your name" required />
-        <FormInput label="Email" type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required />
-        <FormInput label="Password" type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required />
+
+        <FormInput
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Enter your name"
+          required
+        />
+        <FormInput
+          label="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Enter your email"
+          required
+        />
+        <FormInput
+          label="Password"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Enter your password"
+          required
+        />
+
         <button
           type="submit"
-          style={{
-            padding: '0.75rem',
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-bg)',
-            fontWeight: '700',
-            fontSize: '1rem',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-secondary)')}
-          onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
+          className="bg-primary text-background font-bold text-base py-2 rounded hover:bg-secondary transition-colors"
         >
           Create Account
         </button>
-        <p style={{ textAlign: 'center', marginTop: '1rem', color: 'var(--color-text-secondary)' }}>
+
+        <p className="text-center text-sm text-text-secondary mt-2">
           Already have an account?{' '}
           <span
-            style={{ color: 'var(--color-primary)', cursor: 'pointer' }}
+            className="text-primary hover:underline cursor-pointer"
             onClick={() => navigate('/login')}
           >
             Login
           </span>
         </p>
-
       </form>
     </div>
   );

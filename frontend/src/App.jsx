@@ -8,7 +8,6 @@ import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Expenses from './pages/Expenses';
 import AccountStatement from './pages/AccountStatement';
-import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Dashboard from './pages/Dashboard';
 import Signup from './pages/Signup';
@@ -50,14 +49,6 @@ const AppContent = () => {
             element={
               <ProtectedRoute>
                 <AccountStatement />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/reports"
-            element={
-              <ProtectedRoute>
-                <Reports />
               </ProtectedRoute>
             }
           />

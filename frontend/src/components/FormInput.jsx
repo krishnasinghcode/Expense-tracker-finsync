@@ -12,17 +12,11 @@ const FormInput = ({
   ...rest
 }) => {
   return (
-    <div style={{ marginBottom: '1rem' }}>
+    <div className="mb-4">
       {label && (
         <label
           htmlFor={name}
-          style={{
-            display: 'block',
-            marginBottom: '0.3rem',
-            color: 'var(--color-text)',
-            fontWeight: '600',
-            fontSize: '0.9rem',
-          }}
+          className="block mb-1 text-sm font-semibold text-text"
         >
           {label}
         </label>
@@ -37,19 +31,7 @@ const FormInput = ({
         placeholder={placeholder}
         required={required}
         autoComplete={autoComplete}
-        style={{
-          width: '100%',
-          padding: '0.5rem 0.75rem',
-          fontSize: '1rem',
-          borderRadius: '4px',
-          border: `1.5px solid var(--color-secondary)`,
-          backgroundColor: 'var(--color-bg)',
-          color: 'var(--color-text)',
-          transition: 'border-color 0.3s ease',
-          outline: 'none',
-        }}
-        onFocus={e => (e.target.style.borderColor = 'var(--color-primary)')}
-        onBlur={e => (e.target.style.borderColor = 'var(--color-secondary)')}
+        className="w-full px-3 py-2 text-base rounded border border-secondary bg-background text-text focus:outline-none focus:border-primary transition-colors"
         {...rest}
       />
     </div>
