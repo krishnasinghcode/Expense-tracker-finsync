@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --primary-color: #2563eb;
+}
+
+.theme-dark {
+  --bg-color: #1f2937;
+  --text-color: #f3f4f6;
+  --primary-color: #3b82f6;
+}
+
+.theme-sunset {
+  --bg-color: #fff7ed;
+  --text-color: #4b2e2e;
+  --primary-color: #fb923c;
+}
+
+.theme-forest {
+  --bg-color: #e8f5e9;
+  --text-color: #1b5e20;
+  --primary-color: #66bb6a;
+} */
+
+/* Default: Light Theme */
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+  --color-primary: #2563eb;
+  --color-secondary: #6b7280;
+}
+
+/* Dark Theme */
+.theme-dark {
+  --color-bg: #0f172a;
+  --color-text: #f3f4f6;
+  --color-primary: #3b82f6;
+  --color-secondary: #94a3b8;
+}
+
+/* Sunset Theme */
+.theme-sunset {
+  --color-bg: #fff7ed;
+  --color-text: #4b2e2e;
+  --color-primary: #fb923c;
+  --color-secondary: #f97316;
+}
+
+/* Forest Theme */
+.theme-forest {
+  --color-bg: #e8f5e9;
+  --color-text: #1b5e20;
+  --color-primary: #43a047;
+  --color-secondary: #81c784;
+}
