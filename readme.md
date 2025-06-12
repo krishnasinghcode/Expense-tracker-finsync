@@ -20,6 +20,11 @@ Finsync allows users to categorize their expenses, making it easier to analyze s
 Finsync is also compatible with Bankstatements, allowing users to import their bank statements and automatically categorize expenses based on the imported data.
 
 # screenshots
+![Screenshot 2025-06-09 193935](https://github.com/user-attachments/assets/ea1ed68f-1590-4dd8-8a64-ecc3a06131cd)
+![Screenshot 2025-06-09 194006](https://github.com/user-attachments/assets/35a47c2f-3530-44d7-be3f-77bb76e7e87b)
+![Screenshot 2025-06-09 194153](https://github.com/user-attachments/assets/76c0f8ea-2fc7-4a18-91a3-5fa8d5b7da1b)
+![Screenshot 2025-06-09 194211](https://github.com/user-attachments/assets/7726cebb-b510-406e-bfff-ab1a7c85974b)
+
 
 # Features
 - User authentication (sign up, login, logout)
