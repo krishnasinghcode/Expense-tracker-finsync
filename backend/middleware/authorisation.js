@@ -1,60 +1,29 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/userModel.js';
+import User from "../models/userModel.js";
+import jwt from "jsonwebtoken";
 
 export const authenticateUser = async (req, res, next) => {
-  try {
-    // 1. Check if authenticated via Passport session
-    if (req.isAuthenticated && req.isAuthenticated()) {
-      return next(); // User is authenticated via OAuth session
-    }
+    try {
+        if(process.env.DEBUG) console.log("Auth Middleware");
+        const authHeader = req.headers["authorization"];
+        if(process.env.DEBUG) console.log(authHeader);
+        
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
 
-    // 2. Fallback to JWT token in cookie
-    const token = req.cookies?.token;
-    if (!token) {
-      return res.status(401).json({ message: "Access Denied: No token provided" });
-    }
+        const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
+        const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
 
-    req.user = user;
-    next();
-  } catch (err) {
-    console.error(`Authentication error: ${err.message}`);
-    return res.status(403).json({ message: "Invalid or expired token" });
-  }
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+        if(process.env.DEBUG) console.log("auth middleware",user)
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error("Auth Middleware Error:", error);
+        return res.status(401).json({ message: "Unauthorized" });
+    }
 };
-
-export const authenticateAdmin = async (req, res, next) => {
-  try {
-    // 1. Check if authenticated via Passport session
-    if (req.isAuthenticated && req.isAuthenticated()) {
-      if (req.user.role === 'admin') {
-        return next(); // User is authenticated and is an admin
-      } else {
-        return res.status(403).json({ message: "Access Denied: Admins only" });
-      }
-    }
-
-    // 2. Fallback to JWT token in cookie
-    const token = req.cookies?.token;
-    if (!token) {
-      return res.status(401).json({ message: "Access Denied: No token provided" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    if (!user || user.role !== 'admin') {
-      return res.status(403).json({ message: "Access Denied: Admins only" });
-    }
-
-    req.user = user;
-    next();
-  } catch (err) {
-    console.error(`Admin authentication error: ${err.message}`);
-    return res.status(403).json({ message: "Invalid or expired token" });
-  }
-}

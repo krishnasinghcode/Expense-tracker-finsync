@@ -3,7 +3,7 @@ import { getCurrentUser, logoutUser } from '../api/auth';
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -11,8 +11,10 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         const res = await getCurrentUser();
+        console.log(res);
         setUser(res.data);
       } catch (err) {
+        console.warn('User not authenticated:', err);
         setUser(null);
       } finally {
         setLoading(false);
@@ -22,7 +24,9 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = (userData) => setUser(userData);
+  const login = (userData) => {
+    setUser(userData);
+  };
 
   const logout = async () => {
     try {
@@ -39,6 +43,8 @@ export const AuthProvider = ({ children }) => {
       {!loading && children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return useContext(AuthContext);
+}

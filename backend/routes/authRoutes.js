@@ -1,80 +1,46 @@
 import express from 'express';
-import {
-  signup,
-  login,
-  logout,
-  sendVerificationOTP,
-  verifyOTP,
-  sendResetOTP,
-  verifyResetOTP,
-  resetPassword,
-  getCurrentUser
+import { 
+    signup, 
+    login, 
+    sendVerificationOTP, 
+    verifyOTP, 
+    sendResetOTP, 
+    verifyResetOTP, 
+    resetPassword,
+    refreshAccessToken,
+    logout,
+    getCurrentUser,
 } from '../controllers/authController.js';
 
 const router = express.Router();
 
-/**
- * @route   POST /api/auth/signup
- * @desc    Register a new user
- * @access  Public
- */
+// Signup Route
 router.post('/signup', signup);
 
-/**
- * @route   POST /api/auth/login
- * @desc    Login user and issue token
- * @access  Public
- */
+// Login Route
 router.post('/login', login);
 
-/**
- * @route   GET /api/auth/logout
- * @desc    Logout user and clear session/token
- * @access  Private (needs auth middleware, to be added)
- */
-router.get('/logout', logout);
+// Send Verification OTP
+router.post('/verify', sendVerificationOTP);
 
-/**
- * @route   POST /api/auth/send-verification-otp
- * @desc    Send OTP for email verification
- * @access  Public
- */
-router.post('/send-verification-otp', sendVerificationOTP);
-
-/**
- * @route   POST /api/auth/verify-otp
- * @desc    Verify email OTP
- * @access  Public
- */
+// Verify OTP
 router.post('/verify-otp', verifyOTP);
 
-/**
- * @route   POST /api/auth/send-reset-otp
- * @desc    Send OTP for password reset
- * @access  Public
- */
-router.post('/send-reset-otp', sendResetOTP);
+// Send Password Reset OTP
+router.post('/reset-otp', sendResetOTP);
 
-/**
- * @route   POST /api/auth/verify-reset-otp
- * @desc    Verify OTP for password reset
- * @access  Public
- */
+// Verify Reset OTP
 router.post('/verify-reset-otp', verifyResetOTP);
 
-/**
- * @route   POST /api/auth/reset-password
- * @desc    Reset user password after OTP verification
- * @access  Public
- */
+// Reset Password
 router.post('/reset-password', resetPassword);
 
-/**
- * @route   GET /api/auth/me
- * @desc    Get current authenticated user
- * @access  Private (checks cookie JWT)
- */
-router.get('/me', getCurrentUser);
+// Refresh Access Token
+router.get("/refresh-token", refreshAccessToken);
+
+router.post('/logout', logout);
+
+router.get('/user', getCurrentUser);
 
 
 export default router;

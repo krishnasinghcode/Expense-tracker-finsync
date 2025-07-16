@@ -4,7 +4,7 @@ import { signupUser } from '../api/auth.js';
 import FormInput from '../components/FormInput.jsx';
 
 export default function Signup() {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = e =>
@@ -33,8 +33,8 @@ export default function Signup() {
 
         <FormInput
           label="Name"
-          name="name"
-          value={formData.name}
+          name="username"
+          value={formData.username}
           onChange={handleChange}
           placeholder="Enter your name"
           required

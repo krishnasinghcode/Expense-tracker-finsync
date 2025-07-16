@@ -14,7 +14,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const { data } = await loginUser(formData);
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('accessToken', data.accessToken);
       navigate('/dashboard');
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');

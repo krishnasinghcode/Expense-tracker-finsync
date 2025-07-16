@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { getUserProfile, updateUserPreferences, logoutUser } from '../api/users';
 import { useNavigate } from 'react-router-dom';
+import LogoutButton from '../components/LoginButton';
 
 const Settings = () => {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -50,18 +51,6 @@ const Settings = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('theme');
-      navigate('/login');
-    }
   };
 
   return (
@@ -139,12 +128,7 @@ const Settings = () => {
         >
           Save Preferences
         </button>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition-colors"
-        >
-          Logout
-        </button>
+        <LogoutButton />
       </div>
     </div>
   );
