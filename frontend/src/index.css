@@ -1,52 +1,34 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark,forest,sunset,corporate,emerald
+;
+}
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: teal;
+}
 
-:root {
+/* :root {
   --color-bg: #ffffff;
   --color-text: #1f2937;
   --color-primary: #2563eb;
   --color-secondary: #6b7280;
 
-  /* Status Colors */
-  --color-positive: #16a34a;  /* green */
-  --color-negative: #dc2626;  /* red */
-  --color-neutral:  #6b7280;  /* gray */
-}
+  --color-positive: #16a34a;
+  --color-negative: #dc2626;  
+  --color-neutral:  #6b7280;  
+} */
 
 /* Dark Theme */
-.theme-dark {
+/* .theme-dark {
   --color-bg: #0f172a;
   --color-text: #f3f4f6;
   --color-primary: #3b82f6;
   --color-secondary: #94a3b8;
 
-  /* Status Colors */
-  --color-positive: #22c55e;  /* brighter green */
-  --color-negative: #f87171;  /* softer red */
-  --color-neutral:  #94a3b8;  /* lighter gray */
-}
+  --color-positive: #22c55e;
+  --color-negative: #f87171;  
+  --color-neutral:  #94a3b8;  
+} */
 
-/* Sunset Theme */
-.theme-sunset {
-  --color-bg: #fff7ed;
-  --color-text: #4b2e2e;
-  --color-primary: #fb923c;
-  --color-secondary: #f97316;
-
-  /* Status Colors */
-  --color-positive: #16a34a;  /* green */
-  --color-negative: #dc2626;  /* red */
-  --color-neutral:  #6b7280;  /* gray */
-}
-
-/* Forest Theme */
-.theme-forest {
-  --color-bg: #e8f5e9;
-  --color-text: #1b5e20;
-  --color-primary: #43a047;
-  --color-secondary: #81c784;
-
-  /* Status Colors */
-  --color-positive: #22c55e;  /* green */
-  --color-negative: #b91c1c;  /* dark red */
-  --color-neutral:  #4b5563;  /* medium gray */
-}

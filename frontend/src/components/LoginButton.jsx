@@ -20,7 +20,6 @@ const LogoutButton = () => {
   };
 
   return (<div>
-    <Button text="Logout" onClick={handleLogout} variant="error"></Button>
     <Button text="Login" onClick={ToLogin} variant="primary"></Button>
   </div>
 

@@ -3,8 +3,8 @@ import profileIcon from '../assets/profile-icon.svg';
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 h-screen w-64 bg-background text-text flex flex-col p-6 shadow-lg">
-      
+    <nav className="fixed top-0 left-0 h-screen w-64 bg-base-200 text-base-content flex flex-col p-6 shadow-lg">
+
       {/* Logo + Navigation Links Container */}
       <div>
         {/* Logo */}
@@ -33,9 +33,9 @@ const Navbar = () => {
       </div>
 
       {/* User Profile */}
-      <div className="flex items-center gap-3 pt-6 border-t border-secondary mt-auto">
+      <div className="flex items-center gap-3 pt-6 border-t border-base-300 mt-auto">
         <img src={profileIcon} alt="User" className="w-10 h-10 rounded-full" />
-        <span className="text-secondary text-sm">John Doe</span>
+        <span className="text-sm text-base-content/60">John Doe</span>
       </div>
     </nav>
   );

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import CategoryManager from '../components/CategoryManager';
-import SettingsIcon from '../assets/settingsIcon';
+import Button from '../components/Button';
+import SimpleDateFilter from '../components/SimpleDateFilter';
 
 import {
   fetchSummary,
@@ -15,14 +16,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
 } from 'recharts';
 
-const COLORS = [
-  'var(--color-positive)',
-  'var(--color-negative)',
-  'var(--color-neutral)',
-  '#FFBB28',
-  '#845EC2',
-];
-
+const COLORS = ['#22c55e', '#ef4444', '#3b82f6', '#f59e0b', '#8b5cf6'];
 
 export default function Dashboard() {
   const [showCategory, setShowCategory] = useState(false);
@@ -73,253 +67,146 @@ export default function Dashboard() {
   }, [startDate, endDate, type]);
 
   return (
-    <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
+    <div className="min-h-screen bg-base-100 text-base-content p-6">
       <div className="mb-6">
-        <button
-          onClick={() => setShowCategory(true)}
-          className="flex items-center gap-2 px-4 py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          style={{
-            backgroundColor: 'var(--color-bg)',
-            color: 'var(--color-primary)',
-            border: '1px solid var(--color-secondary)',
-            cursor: 'pointer',
-            minWidth: '140px',
-          }}
-        >
-          <SettingsIcon size={20} />
-          <span className="font-semibold text-lg select-none">Category</span>
-        </button>
+        <Button text="Category" variant="primary" onClick={() => setShowCategory(true)} />
       </div>
 
       {showCategory && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-start pt-20 z-50"
-          onClick={() => setShowCategory(false)}
-        >
-          <div
-            className="rounded shadow-lg p-6 w-[400px] max-h-[80vh] overflow-auto relative"
-            style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="modal modal-open">
+          <div className="modal-box relative">
             <button
-              className="absolute top-4 right-4 font-bold text-2xl leading-none"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
               onClick={() => setShowCategory(false)}
-              aria-label="Close modal"
-              style={{ color: 'var(--color-text)' }}
             >
-              &times;
+              ✕
             </button>
-
             <CategoryManager />
           </div>
         </div>
       )}
 
       {loading ? (
-        <p className="text-center mt-10" style={{ color: 'var(--color-text)' }}>
-          Loading reports...
-        </p>
+        <p className="text-center mt-10">Loading reports...</p>
       ) : error ? (
-        <p className="text-center mt-10 font-semibold" style={{ color: 'var(--color-primary)' }}>
-          Error: {error}
-        </p>
+        <p className="text-center mt-10 text-error font-semibold">Error: {error}</p>
       ) : (
         <>
-          <h1 className="text-3xl font-bold mb-4" style={{ color: 'var(--color-primary)' }}>
-            Financial Reports
-          </h1>
+          <h1 className="text-3xl font-bold mb-4 text-primary">Financial Reports</h1>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-4 mb-6 items-center">
-            <label className="flex flex-col text-sm font-medium" style={{ color: 'var(--color-text)' }}>
-              Start Date
-              <input
-                type="date"
-                className="mt-1 p-2 rounded border"
-                style={{
-                  borderColor: 'var(--color-secondary)',
-                  backgroundColor: 'var(--color-bg)',
-                  color: 'var(--color-text)',
-                }}
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </label>
-
-            <label className="flex flex-col text-sm font-medium" style={{ color: 'var(--color-text)' }}>
-              End Date
-              <input
-                type="date"
-                className="mt-1 p-2 rounded border"
-                style={{
-                  borderColor: 'var(--color-secondary)',
-                  backgroundColor: 'var(--color-bg)',
-                  color: 'var(--color-text)',
-                }}
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </label>
-
-            <label className="flex flex-col text-sm font-medium" style={{ color: 'var(--color-text)' }}>
-              Type
-              <select
-                className="mt-1 p-2 rounded border"
-                style={{
-                  borderColor: 'var(--color-secondary)',
-                  backgroundColor: 'var(--color-bg)',
-                  color: 'var(--color-text)',
-                }}
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-              >
-                <option value="">All</option>
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
-              </select>
-            </label>
-
-            <button
-              onClick={loadData}
-              className="rounded px-5 py-2 transition"
-              style={{
-                backgroundColor: 'var(--color-primary)',
-                color: 'var(--color-text)',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-              }}
-            >
-              Refresh
-            </button>
-          </div>
+          <SimpleDateFilter
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            type={type}
+            setType={setType}
+            loadData={loadData}
+          />
 
           {/* Summary */}
-          <section className="rounded-lg p-6 mb-8 shadow" style={{ backgroundColor: 'var(--color-bg)', border: `1px solid var(--color-secondary)` }}>
-            <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--color-primary)' }}>
-              Summary
-            </h2>
+          <div className="card bg-base-200 shadow mb-8 p-6">
+            <h2 className="text-xl font-semibold mb-5 text-primary">Summary</h2>
             <div className="flex justify-around text-center">
               <div>
                 <p>Total Income</p>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-positive)' }}>
-                  ₹{summary?.totalIncome ?? 0}
-                </p>
+                <p className="text-2xl font-bold text-success">₹{summary?.totalIncome ?? 0}</p>
               </div>
               <div>
                 <p>Total Expense</p>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-negative)' }}>
-                  ₹{summary?.totalExpense ?? 0}
-                </p>
+                <p className="text-2xl font-bold text-error">₹{summary?.totalExpense ?? 0}</p>
               </div>
               <div>
                 <p>Net Savings</p>
-                <p className="text-2xl font-bold" style={{ color: summary?.net >= 0 ? 'var(--color-positive)' : 'var(--color-negative)' }}>
-                  ₹{summary?.net ?? 0}
-                </p>
+                <p className={`text-2xl font-bold ${summary?.net >= 0 ? 'text-success' : 'text-error'}`}>₹{summary?.net ?? 0}</p>
               </div>
             </div>
-          </section>
+          </div>
 
-          {/* Category Breakdown */}
-          <section className="rounded-lg p-6 mb-8 shadow" style={{ backgroundColor: 'var(--color-bg)', border: `1px solid var(--color-secondary)` }}>
-            <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--color-primary)' }}>
-              Category Breakdown
-            </h2>
-            {categoryBreakdown.length === 0 ? (
-              <p style={{ color: 'var(--color-text)' }}>No data available.</p>
-            ) : (
-              <div className="flex justify-center">
-                <PieChart width={400} height={300}>
-                  <Pie
-                    data={categoryBreakdown}
-                    dataKey="total"
-                    nameKey="category"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    label
+          <div className="flex flex-col lg:flex-row gap-6 p-6 bg-base-100 text-base-content">
+            {/* Category Breakdown */}
+            <div className="card flex-1 bg-base-200 shadow-lg p-6">
+              <h2 className="text-xl font-semibold mb-5 text-primary">Category Breakdown</h2>
+              {categoryBreakdown.length === 0 ? (
+                <p className="text-base-content/70">No data available.</p>
+              ) : (
+                <div className="flex justify-center">
+                  <PieChart width={400} height={300}>
+                    <Pie
+                      data={categoryBreakdown}
+                      dataKey="total"
+                      nameKey="category"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      label
+                    >
+                      {categoryBreakdown.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `₹${value}`} />
+                    <Legend />
+                  </PieChart>
+                </div>
+              )}
+            </div>
+
+            {/* Trends */}
+            <div className="card flex-1 bg-base-200 shadow-lg p-6">
+              <h2 className="text-xl font-semibold mb-5 text-primary">Trends</h2>
+              {trends.length === 0 ? (
+                <p className="text-base-content/70">No trend data available.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <LineChart
+                    width={500}
+                    height={300}
+                    data={trends}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
-                    {categoryBreakdown.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => `₹${value}`} />
-                  <Legend />
-                </PieChart>
-              </div>
-            )}
-          </section>
-
-          {/* Trends */}
-          <section className="rounded-lg p-6 mb-8 shadow" style={{ backgroundColor: 'var(--color-bg)', border: `1px solid var(--color-secondary)` }}>
-            <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--color-primary)' }}>
-              Trends
-            </h2>
-            {trends.length === 0 ? (
-              <p style={{ color: 'var(--color-text)' }}>No trend data available.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <LineChart
-                  width={600}
-                  height={300}
-                  data={trends}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-neutral)" />
-                  <XAxis dataKey="_id" stroke="var(--color-text)" />
-                  <YAxis stroke="var(--color-text)" />
-                  <Tooltip formatter={(value) => `₹${value}`} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    stroke="var(--color-primary)"
-                    activeDot={{ r: 8 }}
-                  />
-                </LineChart>
-              </div>
-            )}
-          </section>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="_id" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => `₹${value}`} />
+                    <Legend />
+                    <Line type="monotone" dataKey="total" stroke="#3b82f6" activeDot={{ r: 8 }} />
+                  </LineChart>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Recurring */}
-          <section className="rounded-lg p-6 mb-8 shadow" style={{ backgroundColor: 'var(--color-bg)', border: `1px solid var(--color-secondary)` }}>
-            <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--color-primary)' }}>
-              Recurring Transactions
-            </h2>
+          <div className="card bg-base-200 shadow mb-8 p-6">
+            <h2 className="text-xl font-semibold mb-5 text-primary">Recurring Transactions</h2>
             {recurring.length === 0 ? (
-              <p style={{ color: 'var(--color-text)' }}>No recurring transactions found.</p>
+              <p>No recurring transactions found.</p>
             ) : (
-              <ul className="list-disc pl-5 max-h-48 overflow-auto space-y-2" style={{ color: 'var(--color-text)' }}>
+              <ul className="list-disc pl-5 max-h-48 overflow-auto space-y-2">
                 {recurring.map((item, i) => (
-                  <li key={i}>
-                    Amount: ₹{item._id.amount}, Count: {item.count}, Notes: {item.examples.join(', ')}
-                  </li>
+                  <li key={i}>Amount: ₹{item._id.amount}, Count: {item.count}, Notes: {item.examples.join(', ')}</li>
                 ))}
               </ul>
             )}
-          </section>
+          </div>
 
           {/* Bank Matches */}
-          <section className="rounded-lg p-6 shadow" style={{ backgroundColor: 'var(--color-bg)', border: `1px solid var(--color-secondary)` }}>
-            <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--color-primary)' }}>
-              Bank Match Report
-            </h2>
+          <div className="card bg-base-200 shadow p-6">
+            <h2 className="text-xl font-semibold mb-5 text-primary">Bank Match Report</h2>
             {bankMatches.length === 0 ? (
-              <p style={{ color: 'var(--color-text)' }}>No bank matched/unmatched transactions.</p>
+              <p>No bank matched/unmatched transactions.</p>
             ) : (
-              <ul className="list-disc pl-5 max-h-48 overflow-auto space-y-2" style={{ color: 'var(--color-text)' }}>
+              <ul className="list-disc pl-5 max-h-48 overflow-auto space-y-2">
                 {bankMatches.map((item, i) => (
                   <li key={i}>
-                    {item.description || 'No description'} — ₹{item.amount} —{' '}
-                    <span style={{ color: item.matched ? 'var(--color-positive)' : 'var(--color-negative)' }}>
-                      {item.matched ? 'Matched' : 'Unmatched'}
-                    </span>
+                    {item.description || 'No description'} — ₹{item.amount} — <span className={item.matched ? 'text-success' : 'text-error'}>{item.matched ? 'Matched' : 'Unmatched'}</span>
                   </li>
                 ))}
               </ul>
             )}
-          </section>
+          </div>
         </>
       )}
     </div>

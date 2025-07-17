@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
-import { getUserProfile, updateUserPreferences, logoutUser } from '../api/users';
+import { getUserProfile, updateUserPreferences } from '../api/users';
 import { useNavigate } from 'react-router-dom';
 import LogoutButton from '../components/LoginButton';
 
@@ -22,23 +22,28 @@ const Settings = () => {
         setPreferences(data);
         setTheme(data.theme);
         localStorage.setItem('theme', data.theme);
+        document.documentElement.setAttribute('data-theme', data.theme); // ⭐ Update HTML theme
       } catch (error) {
         console.error('Failed to fetch preferences', error);
+        if (error.response?.status === 401) {
+          navigate('/login', { replace: true });
+        }
       }
     };
+
     fetchPreferences();
-  }, [setTheme]);
+  }, [setTheme, navigate]);
 
   const handleThemeChange = newTheme => {
     setTheme(newTheme);
     setPreferences(prev => ({ ...prev, theme: newTheme }));
     localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme); // ⭐ Dynamically apply theme
   };
 
   const handleSave = async () => {
     try {
       await updateUserPreferences(preferences);
-      localStorage.setItem('theme', preferences.theme);
       alert('Preferences saved!');
     } catch (error) {
       console.error('Error saving preferences', error);
@@ -54,22 +59,18 @@ const Settings = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10 bg-background text-text">
+    <div className="max-w-3xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-8 text-primary">Settings</h1>
 
       {/* Theme Selector */}
       <div className="mb-6">
         <label className="block mb-2 font-semibold">Theme</label>
         <div className="flex flex-wrap gap-3">
-          {['light', 'dark', 'sunset', 'forest'].map(t => (
+          {['light', 'dark','forest','sunset','corporate','emerald'].map(t => (
             <button
               key={t}
               onClick={() => handleThemeChange(t)}
-              className={`px-4 py-2 rounded border transition-colors ${
-                preferences.theme === t
-                  ? 'bg-primary text-white font-bold'
-                  : 'bg-background text-text border-secondary'
-              }`}
+              className={`btn ${preferences.theme === t ? 'btn-primary' : 'btn-outline'}`}
             >
               {t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
@@ -84,7 +85,7 @@ const Settings = () => {
           name="language"
           value={preferences.language}
           onChange={handleChange}
-          className="w-full p-2 border border-secondary rounded bg-background text-text"
+          className="select select-bordered w-full"
         >
           <option value="en">English</option>
           <option value="hi">Hindi</option>
@@ -98,7 +99,7 @@ const Settings = () => {
           name="currency"
           value={preferences.currency}
           onChange={handleChange}
-          className="w-full p-2 border border-secondary rounded bg-background text-text"
+          className="select select-bordered w-full"
         >
           <option value="INR">INR - ₹</option>
           <option value="USD">USD - $</option>
@@ -114,7 +115,7 @@ const Settings = () => {
             name="notifications"
             checked={preferences.notifications}
             onChange={handleChange}
-            className="accent-primary"
+            className="toggle toggle-primary"
           />
           Enable Notifications
         </label>
@@ -124,7 +125,7 @@ const Settings = () => {
       <div className="mt-10 flex flex-col sm:flex-row gap-4">
         <button
           onClick={handleSave}
-          className="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90 transition-colors"
+          className="btn btn-primary"
         >
           Save Preferences
         </button>
