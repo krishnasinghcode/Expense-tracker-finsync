@@ -9,9 +9,15 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const checkAuth = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        // ❌ No access token, so no point in calling getCurrentUser
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await getCurrentUser();
-        console.log(res);
         setUser(res.data);
       } catch (err) {
         console.warn('User not authenticated:', err);
@@ -34,6 +40,7 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.error('Logout failed:', err);
     } finally {
+      localStorage.removeItem("accessToken");
       setUser(null);
     }
   };

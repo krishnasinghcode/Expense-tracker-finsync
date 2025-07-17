@@ -3,10 +3,10 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: "http://localhost:5000/api",
-  withCredentials: true,
+  withCredentials: true, // Important: sends refresh token cookie
 });
 
-// 🔐 Attach token in all requests
+// 🔐 Attach access token to all requests
 API.interceptors.request.use(config => {
   const token = localStorage.getItem("accessToken");
   if (token) {
@@ -15,7 +15,7 @@ API.interceptors.request.use(config => {
   return config;
 });
 
-// ♻️ Refresh expired access token
+// ♻️ Handle token expiration and retry logic
 API.interceptors.response.use(
   res => res,
   async error => {
@@ -30,13 +30,23 @@ API.interceptors.response.use(
         const newAccessToken = res.data.accessToken;
         localStorage.setItem("accessToken", newAccessToken);
 
+        // Retry original request with new token
         API.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 
         return API(originalRequest);
+
       } catch (err) {
-        console.error("Token refresh failed:", err);
-        return Promise.reject(error);
+        // 🔴 Refresh token failed — logout user
+        localStorage.removeItem("accessToken");
+
+        // Optional: also call /logout to clear cookies
+        // await API.post('/auth/logout');
+
+        // Redirect to login
+        window.location.href = "/login";
+
+        return Promise.reject(err); // stop retrying
       }
     }
 
