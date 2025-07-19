@@ -233,7 +233,7 @@ const refreshAccessToken = (req, res) => {
 
 const getCurrentUser = async (req, res) => {
   try {
-    if(process.env.DEBUG) console.log("getCurrentUser Function Running");
+    if(process.env.DEBUG_AUTH =='true' ) console.log("getCurrentUser Function Running");
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith('Bearer '))
       return res.status(401).json({ message: 'Not authenticated' });

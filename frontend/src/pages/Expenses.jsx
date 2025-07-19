@@ -3,7 +3,6 @@ import Transactions from './Transactions'
 
 const Expenses = () => {
   return (<div>
-    <div>Expenses</div>
     <Transactions />
   </div>
   )

@@ -9,15 +9,15 @@ export const createTransaction = async (req, res) => {
   const userId = req.user?._id;
   const { type, categoryId, amount, date, note, source } = req.body;
 
-const missingFields = [];
-if (!type) missingFields.push('type');
-if (!categoryId) missingFields.push('categoryId');
-if (!amount) missingFields.push('amount');
-if (!date) missingFields.push('date');
+  const missingFields = [];
+  if (!type) missingFields.push('type');
+  if (!categoryId) missingFields.push('categoryId');
+  if (!amount) missingFields.push('amount');
+  if (!date) missingFields.push('date');
 
-if (missingFields.length > 0) {
-  return res.status(400).json({ message: `Missing required fields: ${missingFields.join(', ')}` });
-}
+  if (missingFields.length > 0) {
+    return res.status(400).json({ message: `Missing required fields: ${missingFields.join(', ')}` });
+  }
 
 
   try {
@@ -58,7 +58,7 @@ export const getTransactions = async (req, res) => {
   }
 
   try {
-    const transactions = await Transaction.find(filter).sort({ date: -1 });
+    const transactions = await Transaction.find(filter).sort({ date: -1 }).populate('categoryId');
     res.status(200).json(transactions);
   } catch (error) {
     console.error('Get Transactions Error:', error);

@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken";
 
 export const authenticateUser = async (req, res, next) => {
     try {
-        if(process.env.DEBUG) console.log("Auth Middleware");
+        if(process.env.DEBUG_AUTH == 'true') console.log("Auth Middleware");
         const authHeader = req.headers["authorization"];
-        if(process.env.DEBUG) console.log(authHeader);
+        if(process.env.DEBUG_AUTH=='true') console.log(authHeader);
         
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({ message: "Unauthorized" });
@@ -19,7 +19,7 @@ export const authenticateUser = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ message: "User not found" });
         }
-        if(process.env.DEBUG) console.log("auth middleware",user)
+        if(process.env.DEBUG_AUTH=='true') console.log("auth middleware",user);
         req.user = user;
         next();
     } catch (error) {

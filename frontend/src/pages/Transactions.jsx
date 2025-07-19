@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import AddTransactionForm from '../components/AddTransactionForm';
+import Button from '../components/Button';
 import { getTransactions, deleteTransaction } from '../api/transaction';
-import { FaTrash, FaEdit } from 'react-icons/fa';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchTransactions = async () => {
     try {
       const res = await getTransactions();
-      if (Array.isArray(res.data)) {
-        setTransactions(res.data);
-      } else {
-        console.error('Invalid data format:', res.data);
-        setTransactions([]);
-      }
+      setTransactions(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error('Failed to fetch transactions:', error);
-      setTransactions([]);
     } finally {
       setLoading(false);
     }
@@ -36,16 +33,37 @@ const Transactions = () => {
     fetchTransactions();
   }, []);
 
-  if (loading) return <div className="text-center text-lg">Loading...</div>;
-
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Your Transactions</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold">Your Transactions</h2>
+        <Button text="Add Expense" variant="primary" onClick={() => setShowModal(true)} />
+      </div>
 
-      {transactions.length === 0 ? (
+      {/* Modal */}
+      {showModal && (
+         <div className="fixed inset-0 z-50 bg-white/10 backdrop-blur-sm flex items-center justify-center">
+          <div className="bg-base-100 p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Add New Transaction</h3>
+              <button className="btn btn-sm btn-circle" onClick={() => setShowModal(false)}>✕</button>
+            </div>
+            <AddTransactionForm
+              onSuccess={() => {
+                fetchTransactions();
+                setShowModal(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="text-center text-lg">Loading...</div>
+      ) : transactions.length === 0 ? (
         <div className="text-center text-gray-500">No transactions found.</div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto mt-4">
           <table className="table table-zebra w-full">
             <thead>
               <tr className="bg-base-200 text-base-content">
