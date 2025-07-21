@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Button from './Button';
 import FormInput from './FormInput';
-import { createTransaction } from '../api/transaction';
+import { createTransaction, updateTransaction } from '../api/transaction';
 import { getCategories } from '../api/category';
 
-const AddTransactionForm = ({ onSuccess }) => {
+const AddTransactionForm = ({ onSuccess, initialData = null }) => {
+  const isEdit = !!initialData;
+
   const [formData, setFormData] = useState({
-    type: 'expense',
-    categoryId: '',
-    amount: '',
-    date: '',
-    note: '',
+    type: initialData?.type || 'expense',
+    categoryId: initialData?.categoryId?._id || '',
+    amount: initialData?.amount || '',
+    date: initialData?.date?.split('T')[0] || new Date().toISOString().split('T')[0],
+    note: initialData?.note || '',
   });
 
   const [categories, setCategories] = useState([]);
@@ -31,11 +33,16 @@ const AddTransactionForm = ({ onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createTransaction(formData);
+      if (isEdit) {
+        await updateTransaction(initialData._id, formData);  // 👈 new API call
+      } else {
+        await createTransaction(formData);
+      }
+
       setFormData({ type: 'expense', categoryId: '', amount: '', date: '', note: '' });
       if (onSuccess) onSuccess();
     } catch (err) {
-      console.error('Error creating transaction:', err);
+      console.error('Transaction error:', err);
     }
   };
 

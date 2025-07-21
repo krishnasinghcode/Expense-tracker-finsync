@@ -8,6 +8,7 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editData, setEditData] = useState(null);
 
   const fetchTransactions = async () => {
     try {
@@ -42,7 +43,7 @@ const Transactions = () => {
 
       {/* Modal */}
       {showModal && (
-         <div className="fixed inset-0 z-50 bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <div className="bg-base-100 p-6 rounded-lg shadow-lg w-full max-w-lg">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold">Add New Transaction</h3>
@@ -52,8 +53,11 @@ const Transactions = () => {
               onSuccess={() => {
                 fetchTransactions();
                 setShowModal(false);
+                setEditData(null);
               }}
+              initialData={editData}
             />
+
           </div>
         </div>
       )}
@@ -88,7 +92,11 @@ const Transactions = () => {
                   <td>{new Date(tx.date).toLocaleDateString()}</td>
                   <td>{tx.note || '-'}</td>
                   <td className="space-x-2">
-                    <button className="btn btn-sm btn-warning">
+                    <button className="btn btn-sm btn-warning"
+                      onClick={() => {
+                        setEditData(tx);        // set transaction data to edit
+                        setShowModal(true);     // open the modal with form
+                      }}>
                       <FaEdit />
                     </button>
                     <button className="btn btn-sm btn-error" onClick={() => handleDelete(tx._id)}>
